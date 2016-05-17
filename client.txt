@@ -1,0 +1,21 @@
+import socket               # Import socket module
+
+host = socket.gethostname()
+port = 6000               # Reserve a port for your service.
+
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+print 'Socket Created'
+s.connect((host, port))
+
+while True:
+    data="hello"
+    try:
+        s.send(data)
+    except socket.error:
+        print 'send failed'
+        sys.exit()
+
+    print 'Message send successfully'
+    print s.recv(1024)
+    
+s.close                     # Close the socket when done
