@@ -7,15 +7,15 @@ s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 print 'Socket Created'
 s.connect((host, port))
 
-while True:
+
     data="hello"
-    try:
-        s.send(data)
+try:
+        s.sendall(data)
     except socket.error:
         print 'send failed'
         sys.exit()
 
     print 'Message send successfully'
     print s.recv(1024)
-    
+    print data
 s.close                     # Close the socket when done
