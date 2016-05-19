@@ -29,48 +29,40 @@ print 'Socket now listening'
 #Function for handling connections. This will be used to create threads
 def clientthread(conn):
     #Sending message to connected client
-    #conn.send('Welcome to the server. Type something and hit enter\n') #send only takes string
-     
+    conn[0].send('Welcome to the server. Type something and hit enter\n') #send only takes string
+    conn[1].send('Welcome to the server. Type something and hit enter\n') #send only takes string
     #infinite loop so that function do not terminate and thread do not end.
-    if conn[0]:
-            while True:
+    while True:
           
-                #Receiving from client
-                data = conn[0].recv(1024)
-            reply = 'OK...' + data
-            if not data: 
-                      break
+      #Receiving from client
+        data = conn[1].recv(1024)
+        data1 = conn[0].recv(1024)
+    if data:
+        msg='client 1 : ' +data
+        conn[0].sendall(msg)
+    if not data:  
+              break
             
-                    conn[1].sendall(reply)
-            print 'message send successfully'
-      
-            #came out of loop
-            conn.close()
-    
-    if conn[1]:
-            while True:
-          
-                #Receiving from client
-                data = conn[1].recv(1024)
-            reply = 'OK...' + data
-            if not data: 
-                      break
+    if data1:
+        msg1='client 2 : ' +data1
+        conn[1].sendall(msg1)
+    if not data1:  
+              break
+    conn[0].close()
+    conn[1].close()
             
-                    conn[0].sendall(reply)
-                  print 'message send successfully'
-            #came out of loop
-            conn.close()
     
 #now keep talking with the client
-for x in xrange(2):
     #wait to accept a connection - blocking call
-    conn[x], addr = s.accept()
-    if conn[0] != NULL :
-        start_new_thread(clientthread ,(conn[0],))
-            print 'Connected with ' + addr[0] + ':' + str(addr[1])
-           elif conn[1] != NULL :
-        start_new_thread(clientthread ,(conn[1],))
-            print 'Connected with ' + addr[0] + ':' + str(addr[1])
+    conn[0], addr = s.accept()
+    conn[1], addr[1] = s.accept()
+    start_new_thread(clientthread ,(conn,))
+    #if conn[0] != NULL :
+     #   start_new_thread(clientthread ,(conn[0],))
+      #      print 'Connected with ' + addr[0] + ':' + str(addr[1])
+       #    elif conn[1] != NULL :
+        #start_new_thread(clientthread ,(conn[1],))
+         #   print 'Connected with ' + addr[0] + ':' + str(addr[1])
     #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
         
 s.close()
